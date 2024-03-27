@@ -2247,6 +2247,7 @@ void adjustOpenFilesLimit(void) {
 /* Check that server.tcp_backlog can be actually enforced in Linux according
  * to the value of /proc/sys/net/core/somaxconn, or warn about it. */
 void checkTcpBacklogSettings(void) {
+    return; // Tyche
 #if defined(HAVE_PROC_SOMAXCONN)
     FILE *fp = fopen("/proc/sys/net/core/somaxconn","r");
     char buf[1024];
@@ -6853,10 +6854,12 @@ redisTestProc *getTestProcByName(const char *name) {
 }
 #endif
 
-#define TYCHE_N_ARGS 11
+#define TYCHE_N_ARGS 15
 char* tyche_args[TYCHE_N_ARGS] = {
     "tyche-redis-server",
     "--jemalloc-bg-thread", "no",
+    "--appendonly", "no",
+    "--save", "",
     "--io-threads", "1",
     "--bind", "127.0.0.1",
     "--loglevel", "debug",

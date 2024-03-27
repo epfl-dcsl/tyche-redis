@@ -464,6 +464,8 @@ int get_proc_stat_ll(int i, long long *res) {
     int fd, l;
     char *p, *x;
 
+    // Do not collect stats on Tyche
+    return 0;
     if ((fd = open("/proc/self/stat",O_RDONLY)) == -1) return 0;
     if ((l = read(fd,buf,sizeof(buf)-1)) <= 0) {
         close(fd);

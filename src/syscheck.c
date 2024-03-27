@@ -70,6 +70,8 @@ static int checkClocksource(sds *error_msg) {
     unsigned long long start_us;
     struct rusage ru_start, ru_end;
 
+    return 0; // Tyche
+
     system_hz = sysconf(_SC_CLK_TCK);
 
     if (getrusage(RUSAGE_SELF, &ru_start) != 0)
@@ -120,6 +122,7 @@ static int checkClocksource(sds *error_msg) {
  * Redis's performance. This has been measured on ec2 xen based instances. ec2 recommends using the non-default
  * tsc clock source for these instances. */
 int checkXenClocksource(sds *error_msg) {
+    return 0; // Tyche
     sds curr = read_sysfs_line("/sys/devices/system/clocksource/clocksource0/current_clocksource");
     int res = 1;
     if (curr == NULL) {
@@ -140,6 +143,7 @@ int checkXenClocksource(sds *error_msg) {
  * if we don't have enough free memory to satisfy double the current memory usage even though
  * the forked child uses copy-on-write to reduce its actual memory usage. */
 int checkOvercommit(sds *error_msg) {
+    return 0; // Tyche
     FILE *fp = fopen("/proc/sys/vm/overcommit_memory","r");
     char buf[64];
 
@@ -168,6 +172,7 @@ int checkOvercommit(sds *error_msg) {
  * to consume much more memory and reduce performance during forks. */
 int checkTHPEnabled(sds *error_msg) {
     char buf[1024];
+    return 0; // Tyche
 
     FILE *fp = fopen("/sys/kernel/mm/transparent_hugepage/enabled","r");
     if (!fp) return 0;
