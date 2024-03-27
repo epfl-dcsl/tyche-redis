@@ -6853,10 +6853,30 @@ redisTestProc *getTestProcByName(const char *name) {
 }
 #endif
 
+#define TYCHE_N_ARGS 11
+char* tyche_args[TYCHE_N_ARGS] = {
+    "tyche-redis-server",
+    "--jemalloc-bg-thread", "no",
+    "--io-threads", "1",
+    "--bind", "127.0.0.1",
+    "--loglevel", "debug",
+    "--protected-mode", "no"
+};
+
 int main(int argc, char **argv) {
     struct timeval tv;
     int j;
     char config_from_stdin = 0;
+
+    // Tyche: Update arguments
+    // We need to allocate them on the heap because redis overwrites its own args.
+    argv = zmalloc(sizeof(tyche_args));
+    for (int i = 0; i < TYCHE_N_ARGS; i++) {
+        int len = strlen(tyche_args[i]) + 1;
+        argv[i] = zmalloc(len);
+        strcpy(argv[i], tyche_args[i]);
+    }
+    argc = TYCHE_N_ARGS;
 
 #ifdef REDIS_TEST
     if (argc >= 3 && !strcasecmp(argv[1], "test")) {
