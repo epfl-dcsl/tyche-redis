@@ -92,12 +92,12 @@
 
 /* Test for polling API */
 #ifdef __linux__
-#define HAVE_EPOLL 1
+/* #define HAVE_EPOLL 1 */
 #endif
 
 /* Test for accept4() */
 #ifdef __linux__
-#define HAVE_ACCEPT4 1
+/* #define HAVE_ACCEPT4 1 */
 #endif
 
 #if (defined(__APPLE__) && defined(MAC_OS_10_6_DETECTED)) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined (__NetBSD__)
@@ -142,8 +142,12 @@
 #endif
 
 #if __GNUC__ >= 3
+#ifndef likely
 #define likely(x) __builtin_expect(!!(x), 1)
+#endif
+#ifndef unlikely
 #define unlikely(x) __builtin_expect(!!(x), 0)
+#endif
 #else
 #define likely(x) (x)
 #define unlikely(x) (x)

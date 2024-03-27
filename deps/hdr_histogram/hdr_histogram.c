@@ -18,10 +18,11 @@
 #include "hdr_atomic.h"
 
 #ifndef HDR_MALLOC_INCLUDE
-#define HDR_MALLOC_INCLUDE "hdr_malloc.h"
-#endif
-
+#define HDR_MALLOC_INCLUDE
+#include "hdr_redis_malloc.h"
+#else
 #include HDR_MALLOC_INCLUDE
+#endif
 
 /*  ######   #######  ##     ## ##    ## ########  ######  */
 /* ##    ## ##     ## ##     ## ###   ##    ##    ##    ## */

@@ -63,14 +63,19 @@ static void aeApiFree(aeEventLoop *eventLoop) {
 static int aeApiAddEvent(aeEventLoop *eventLoop, int fd, int mask) {
     aeApiState *state = eventLoop->apidata;
 
+    printf("Select add event: %d, mask: %d\n", fd, mask);
     if (mask & AE_READABLE) FD_SET(fd,&state->rfds);
     if (mask & AE_WRITABLE) FD_SET(fd,&state->wfds);
+    if (FD_ISSET(15, &state->rfds)) {
+        printf("Tyche configured\n");
+    }
     return 0;
 }
 
 static void aeApiDelEvent(aeEventLoop *eventLoop, int fd, int mask) {
     aeApiState *state = eventLoop->apidata;
 
+    printf("Select del event: %d, mask: %d\n", fd, mask);
     if (mask & AE_READABLE) FD_CLR(fd,&state->rfds);
     if (mask & AE_WRITABLE) FD_CLR(fd,&state->wfds);
 }
@@ -81,6 +86,10 @@ static int aeApiPoll(aeEventLoop *eventLoop, struct timeval *tvp) {
 
     memcpy(&state->_rfds,&state->rfds,sizeof(fd_set));
     memcpy(&state->_wfds,&state->wfds,sizeof(fd_set));
+
+    if (FD_ISSET(15, &state->rfds)) {
+        printf("Tyche connection is set!\n");
+    }
 
     retval = select(eventLoop->maxfd+1,
                 &state->_rfds,&state->_wfds,NULL,tvp);

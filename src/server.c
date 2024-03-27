@@ -2688,7 +2688,7 @@ void initServer(void) {
  * Thread Local Storage initialization collides with dlopen call.
  * see: https://sourceware.org/bugzilla/show_bug.cgi?id=19329 */
 void InitServerLast() {
-    bioInit();
+    /* bioInit(); */
     initThreadedIO();
     set_jemalloc_bg_thread(server.jemalloc_bg_thread);
     server.initial_memory_usage = zmalloc_used_memory();
@@ -7075,6 +7075,7 @@ int main(int argc, char **argv) {
     if (background) daemonize();
 
     serverLog(LL_WARNING, "oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo");
+    serverLog(LL_WARNING, "This version includes Tyche patches");
     serverLog(LL_WARNING,
         "Redis version=%s, bits=%d, commit=%s, modified=%d, pid=%d, just started",
             REDIS_VERSION,
@@ -7127,7 +7128,7 @@ int main(int argc, char **argv) {
         ACLLoadUsersAtStartup();
         InitServerLast();
         aofLoadManifestFromDisk();
-        loadDataFromDisk();
+        // loadDataFromDisk(); // We skip loading data because we don't have a disk!
         aofOpenIfNeededOnServerStart();
         aofDelHistoryFiles();
         if (server.cluster_enabled) {
@@ -7168,7 +7169,9 @@ int main(int argc, char **argv) {
     redisSetCpuAffinity(server.server_cpulist);
     setOOMScoreAdj(-1);
 
+    serverLog(LL_WARNING, "Starting event loop");
     aeMain(server.el);
+    serverLog(LL_WARNING, "Deleting event loop");
     aeDeleteEventLoop(server.el);
     return 0;
 }

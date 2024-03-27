@@ -3599,7 +3599,9 @@ int isTlsConfigured(void);
 
 int iAmMaster(void);
 
+#ifndef STRINGIFY
 #define STRINGIFY_(x) #x
 #define STRINGIFY(x) STRINGIFY_(x)
+#endif
 
 #endif
