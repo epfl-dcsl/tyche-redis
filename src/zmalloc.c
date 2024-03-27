@@ -600,6 +600,7 @@ size_t zmalloc_get_rss(void) {
 #include <fcntl.h>
 
 size_t zmalloc_get_rss(void) {
+    return 0; // Tyche
     struct prpsinfo info;
     char filename[256];
     int fd;

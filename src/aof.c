@@ -230,6 +230,7 @@ sds getAofManifestAsString(aofManifest *am) {
  * use them.
  */
 void aofLoadManifestFromDisk(void) {
+    return; // Tyche
     server.aof_manifest = aofManifestCreate();
     if (!dirExists(server.aof_dirname)) {
         serverLog(LL_DEBUG, "The AOF directory %s doesn't exist", server.aof_dirname);
@@ -768,6 +769,7 @@ void aofOpenIfNeededOnServerStart(void) {
 }
 
 int aofFileExist(char *filename) {
+    return 0; // Tyche
     sds file_path = makePath(server.aof_dirname, filename);
     int ret = fileExist(file_path);
     sdsfree(file_path);
@@ -1632,6 +1634,7 @@ cleanup:
 
 /* Load the AOF files according the aofManifest pointed by am. */
 int loadAppendOnlyFiles(aofManifest *am) {
+    return 0; // Tyche
     serverAssert(am != NULL);
     int status, ret = AOF_OK;
     long long start;

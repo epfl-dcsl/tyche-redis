@@ -836,20 +836,21 @@ void getRandomBytes(unsigned char *p, size_t len) {
          * the same seed with a progressive counter. For the goals of this
          * function we just need non-colliding strings, there are no
          * cryptographic security needs. */
-        FILE *fp = fopen("/dev/urandom","r");
-        if (fp == NULL || fread(seed,sizeof(seed),1,fp) != 1) {
-            /* Revert to a weaker seed, and in this case reseed again
-             * at every call.*/
-            for (unsigned int j = 0; j < sizeof(seed); j++) {
-                struct timeval tv;
-                gettimeofday(&tv,NULL);
-                pid_t pid = getpid();
-                seed[j] = tv.tv_sec ^ tv.tv_usec ^ pid ^ (long)fp;
-            }
-        } else {
-            seed_initialized = 1;
-        }
-        if (fp) fclose(fp);
+        /* FILE *fp = fopen("/dev/urandom","r"); */
+        /* if (fp == NULL || fread(seed,sizeof(seed),1,fp) != 1) { */
+        /*     /1* Revert to a weaker seed, and in this case reseed again */
+        /*      * at every call.*/
+        /*     for (unsigned int j = 0; j < sizeof(seed); j++) { */
+        /*         struct timeval tv; */
+        /*         gettimeofday(&tv,NULL); */
+        /*         pid_t pid = getpid(); */
+        /*         seed[j] = tv.tv_sec ^ tv.tv_usec ^ pid ^ (long)fp; */
+        /*     } */
+        /* } else { */
+        /*     seed_initialized = 1; */
+        /* } */
+        /* if (fp) fclose(fp); */
+        seed_initialized = 1;
     }
 
     while(len) {

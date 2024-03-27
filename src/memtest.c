@@ -359,6 +359,7 @@ void memtest_alloc_and_test(size_t megabytes, int passes) {
 }
 
 void memtest(size_t megabytes, int passes) {
+    return; // Tuche
 #if !defined(__HAIKU__)
     if (ioctl(1, TIOCGWINSZ, &ws) == -1) {
         ws.ws_col = 80;

@@ -2490,7 +2490,7 @@ void initServer(void) {
            sizeof(server.client_pause_per_purpose));
     server.postponed_clients = listCreate();
     server.events_processed_while_blocked = 0;
-    server.system_memory_size = zmalloc_get_memory_size();
+    server.system_memory_size = 0x100000000; //zmalloc_get_memory_size();
     server.blocked_last_cron = 0;
     server.blocking_op_nesting = 0;
     server.thp_enabled = 0;
@@ -6941,7 +6941,7 @@ int main(int argc, char **argv) {
      * to reset it and restore it back. We do this early to avoid a potential
      * race condition with threads that could be creating files or directories.
      */
-    umask(server.umask = umask(0777));
+    /* umask(server.umask = umask(0777)); */
 
     uint8_t hashseed[16];
     getRandomBytes(hashseed,sizeof(hashseed));
