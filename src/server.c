@@ -2449,10 +2449,10 @@ void makeThreadKillable(void) {
 void initServer(void) {
     int j;
 
-    signal(SIGHUP, SIG_IGN);
-    signal(SIGPIPE, SIG_IGN);
-    setupSignalHandlers();
-    makeThreadKillable();
+    // signal(SIGHUP, SIG_IGN);
+    // signal(SIGPIPE, SIG_IGN);
+    // setupSignalHandlers();
+    // makeThreadKillable();
 
     if (server.syslog_enabled) {
         openlog(server.syslog_ident, LOG_PID | LOG_NDELAY | LOG_NOWAIT,
@@ -2507,7 +2507,7 @@ void initServer(void) {
     }
 
     createSharedObjects();
-    adjustOpenFilesLimit();
+    /* adjustOpenFilesLimit(); */
     const char *clk_msg = monotonicInit();
     serverLog(LL_NOTICE, "monotonic clock: %s", clk_msg);
     server.el = aeCreateEventLoop(server.maxclients+CONFIG_FDSET_INCR);
@@ -2677,7 +2677,7 @@ void initServer(void) {
     /* Initialize ACL default password if it exists */
     ACLUpdateDefaultUserPassword(server.requirepass);
 
-    applyWatchdogPeriod();
+    /* applyWatchdogPeriod(); */
 
     if (server.maxmemory_clients != 0)
         initServerClientMemUsageBuckets();
@@ -6854,12 +6854,13 @@ redisTestProc *getTestProcByName(const char *name) {
 }
 #endif
 
-#define TYCHE_N_ARGS 15
+#define TYCHE_N_ARGS 17
 char* tyche_args[TYCHE_N_ARGS] = {
     "tyche-redis-server",
     "--jemalloc-bg-thread", "no",
     "--appendonly", "no",
     "--save", "",
+    "--disable-thp", "no",
     "--io-threads", "1",
     "--bind", "127.0.0.1",
     "--loglevel", "debug",
@@ -7123,7 +7124,7 @@ int main(int argc, char **argv) {
         /* Things not needed when running in Sentinel mode. */
         serverLog(LL_WARNING,"Server initialized");
     #ifdef __linux__
-        linuxMemoryWarnings();
+        /* linuxMemoryWarnings(); */
         sds err_msg = NULL;
         if (checkXenClocksource(&err_msg) < 0) {
             serverLog(LL_WARNING, "WARNING %s", err_msg);

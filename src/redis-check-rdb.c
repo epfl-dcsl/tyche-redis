@@ -172,6 +172,7 @@ void rdbCheckHandleCrash(int sig, siginfo_t *info, void *secret) {
 }
 
 void rdbCheckSetupSignals(void) {
+    return; // Tyche
     struct sigaction act;
 
     sigemptyset(&act.sa_mask);

@@ -11010,11 +11010,14 @@ void moduleInitModulesSystem(void) {
      * and we do not want to block not in the read nor in the write half.
      * Enable close-on-exec flag on pipes in case of the fork-exec system calls in
      * sentinels or redis servers. */
-    if (anetPipe(server.module_pipe, O_CLOEXEC|O_NONBLOCK, O_CLOEXEC|O_NONBLOCK) == -1) {
-        serverLog(LL_WARNING,
-            "Can't create the pipe for module threads: %s", strerror(errno));
-        exit(1);
-    }
+    // Tyche: skip pipe
+    server.module_pipe[0] = 10;
+    server.module_pipe[1] = 11;
+    /* if (anetPipe(server.module_pipe, O_CLOEXEC|O_NONBLOCK, O_CLOEXEC|O_NONBLOCK) == -1) { */
+    /*     serverLog(LL_WARNING, */
+    /*         "Can't create the pipe for module threads: %s", strerror(errno)); */
+    /*     exit(1); */
+    /* } */
 
     /* Create the timers radix tree. */
     Timers = raxNew();

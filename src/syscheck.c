@@ -233,6 +233,7 @@ static int smapsGetSharedDirty(unsigned long addr) {
  * titled: "arm64: pgtable: Ensure dirty bit is preserved across pte_wrprotect()"
  */
 int checkLinuxMadvFreeForkBug(sds *error_msg) {
+    return 0; // Tyche
     int ret, pipefd[2] = { -1, -1 };
     pid_t pid;
     char *p = NULL, *q;
