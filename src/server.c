@@ -788,7 +788,7 @@ size_t ClientsPeakMemOutput[CLIENTS_PEAK_MEM_USAGE_SLOTS] = {0};
 
 int clientsCronTrackExpansiveClients(client *c, int time_idx) {
     size_t in_usage = sdsZmallocSize(c->querybuf) + c->argv_len_sum +
-	              (c->argv ? zmalloc_size(c->argv) : 0);
+                (c->argv ? zmalloc_size(c->argv) : 0);
     size_t out_usage = getClientOutputBufferMemoryUsage(c);
 
     /* Track the biggest values observed so far in this slot. */
@@ -6855,7 +6855,8 @@ redisTestProc *getTestProcByName(const char *name) {
 #endif
 
 #define TYCHE_N_ARGS 17
-char* tyche_args[TYCHE_N_ARGS] = {
+#define TYCHE_ARGS_PLUS_ENVP 22
+static char* tyche_args[TYCHE_ARGS_PLUS_ENVP] = {
     "tyche-redis-server",
     "--jemalloc-bg-thread", "no",
     "--appendonly", "no",
@@ -6864,7 +6865,9 @@ char* tyche_args[TYCHE_N_ARGS] = {
     "--io-threads", "1",
     "--bind", "127.0.0.1",
     "--loglevel", "debug",
-    "--protected-mode", "no"
+    "--protected-mode", "no",
+    // Environment settings.
+    NULL, "LANGUAGE=en_GB:en", "LANG=C.UTF-8", NULL, NULL
 };
 
 int main(int argc, char **argv) {
@@ -6875,12 +6878,17 @@ int main(int argc, char **argv) {
     // Tyche: Update arguments
     // We need to allocate them on the heap because redis overwrites its own args.
     argv = zmalloc(sizeof(tyche_args));
-    for (int i = 0; i < TYCHE_N_ARGS; i++) {
+    for (int i = 0; i < TYCHE_ARGS_PLUS_ENVP; i++) {
+      if (tyche_args[i] != NULL) {
         int len = strlen(tyche_args[i]) + 1;
         argv[i] = zmalloc(len);
         strcpy(argv[i], tyche_args[i]);
+      } else {
+        argv[i] = NULL;
+      }
     }
     argc = TYCHE_N_ARGS;
+    environ = &argv[TYCHE_N_ARGS+1];
 
 #ifdef REDIS_TEST
     if (argc >= 3 && !strcasecmp(argv[1], "test")) {
@@ -6933,8 +6941,9 @@ int main(int argc, char **argv) {
     /* To achieve entropy, in case of containers, their time() and getpid() can
      * be the same. But value of tv_usec is fast enough to make the difference */
     gettimeofday(&tv,NULL);
-    srand(time(NULL)^getpid()^tv.tv_usec);
-    srandom(time(NULL)^getpid()^tv.tv_usec);
+    //TODO(aghosn): crashes on time(NULL);
+    srand(/*time(NULL)^*/getpid()^tv.tv_usec);
+    srandom(/*time(NULL)^*/getpid()^tv.tv_usec);
     init_genrand64(((long long) tv.tv_sec * 1000000 + tv.tv_usec) ^ getpid());
     crc64_init();
 
