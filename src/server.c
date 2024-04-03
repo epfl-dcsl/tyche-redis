@@ -6870,6 +6870,16 @@ static char* tyche_args[TYCHE_ARGS_PLUS_ENVP] = {
     NULL, "LANGUAGE=en_GB:en", "LANG=C.UTF-8", NULL, NULL
 };
 
+static void my_debug(unsigned long long marker) {
+ __asm__ __volatile__ (
+      "movq %0, %%rdi\n\t"
+      "movq $10, %%rax\n\t"
+      "vmcall\n\t"
+      :
+      : "rm" (marker)
+      : "rax", "rdi", "memory");
+}
+
 int main(int argc, char **argv) {
     struct timeval tv;
     int j;
@@ -6889,6 +6899,7 @@ int main(int argc, char **argv) {
     }
     argc = TYCHE_N_ARGS;
     environ = &argv[TYCHE_N_ARGS+1];
+
 
 #ifdef REDIS_TEST
     if (argc >= 3 && !strcasecmp(argv[1], "test")) {
@@ -6988,6 +6999,7 @@ int main(int argc, char **argv) {
         redis_check_rdb_main(argc,argv,NULL);
     else if (strstr(exec_name,"redis-check-aof") != NULL)
         redis_check_aof_main(argc,argv);
+
 
     if (argc >= 2) {
         j = 1; /* First option to parse in argv[] */
