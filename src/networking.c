@@ -1976,10 +1976,11 @@ int writeToClient(client *c, int handler_installed) {
          * Moreover, we also send as much as possible if the client is
          * a slave or a monitor (otherwise, on high-speed traffic, the
          * replication/output buffer will grow indefinitely) */
-        if (totwritten > NET_MAX_WRITES_PER_EVENT &&
+        //TODO(aghosn): commenting this solves the issue...
+        /*if (totwritten > NET_MAX_WRITES_PER_EVENT &&
             (server.maxmemory == 0 ||
              zmalloc_used_memory() < server.maxmemory) &&
-            !(c->flags & CLIENT_SLAVE)) break;
+            !(c->flags & CLIENT_SLAVE)) break;*/
     }
 
     if (getClientType(c) == CLIENT_TYPE_SLAVE) {

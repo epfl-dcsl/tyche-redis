@@ -67,7 +67,7 @@ static int aeApiAddEvent(aeEventLoop *eventLoop, int fd, int mask) {
     if (mask & AE_READABLE) FD_SET(fd,&state->rfds);
     if (mask & AE_WRITABLE) FD_SET(fd,&state->wfds);
     if (FD_ISSET(15, &state->rfds)) {
-        printf("Tyche configured\n");
+        //printf("Tyche configured on fd %d\n", fd);
     }
     return 0;
 }
@@ -88,7 +88,7 @@ static int aeApiPoll(aeEventLoop *eventLoop, struct timeval *tvp) {
     memcpy(&state->_wfds,&state->wfds,sizeof(fd_set));
 
     if (FD_ISSET(15, &state->rfds)) {
-        printf("Tyche connection is set!\n");
+        //printf("Tyche connection is set!\n");
     }
 
     retval = select(eventLoop->maxfd+1,
