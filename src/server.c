@@ -1283,7 +1283,7 @@ int serverCron(struct aeEventLoop *eventLoop, long long id, void *clientData) {
 
     /* Show some info about non-empty databases */
     if (server.verbosity <= LL_VERBOSE) {
-        run_with_period(5000) {
+        /*run_with_period(5000) {
             for (j = 0; j < server.dbnum; j++) {
                 long long size, used, vkeys;
 
@@ -1294,7 +1294,7 @@ int serverCron(struct aeEventLoop *eventLoop, long long id, void *clientData) {
                     serverLog(LL_VERBOSE,"DB %d: %lld keys (%lld volatile) in %lld slots HT.",j,used,vkeys,size);
                 }
             }
-        }
+        }*/
     }
 
     /* Show information about connected clients */
